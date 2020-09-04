@@ -1,0 +1,26 @@
+{% load i18n admin_urls %}
+<h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
+
+<ul>
+{% if choices|slice:"4:" %}
+    <li><select id="{{ title|slugify }}_filter_select" style="width:100%;color:#666">
+    {% for choice in choices %}
+        <option{% if choice.selected %} selected="selected"{% endif %}
+         value="{{ choice.query_string|iriencode }}">{{ choice.display }}</option>
+    {% endfor %}
+</select></li>
+{% else %}
+    {% for choice in choices %}
+        <li{% if choice.selected %} class="selected"{% endif %}>
+        <a href="{{ choice.query_string|iriencode }}" title="{{ choice.display }}">{{ choice.display }}</a></li>
+    {% endfor %}
+{% endif %}
+</ul>
+
+<script>
+(function($) {
+    $('select#{{ title|slugify }}_filter_select').change(function(evt) {
+        window.location.href = $(this).val();
+    });
+})(django.jQuery);
+</script>

@@ -1,0 +1,55 @@
+{% load i18n admin_urls %}
+<h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
+
+<ul>
+    {% for choice in choices|slice:":1" %}
+        <li{% if choice.selected %} class="selected"{% endif %}>
+            <a href="{{ choice.query_string|iriencode }}" title="{{ choice.display }}">{{ choice.display }}</a></li>
+        </li>
+    {% endfor %}
+    <li>
+        <select id="{{ title|slugify }}_select" multiple style="color:#999;width:100%">
+        {% for choice in choices|slice:"1:" %}
+            <option{% if choice.selected %} selected{% endif %}
+                value="{{ choice.value }}"
+                data-key="{{ choice.key }}"
+                data-query="{{ choice.query_string|iriencode }}">
+                {{ choice.display }}
+            </option>
+        {% endfor %}
+        </select>
+    </li>
+    <li>
+        <a id="{{ title|slugify }}_submit" href="" title="filter" class="button"
+        style="background-color:buttonface;color:#666">filter</a>
+    </li>
+</ul>
+
+<script>
+(function($) {
+    $('a#{{ title|slugify }}_submit').click(function(evt) {
+
+        // fetch data from selected options
+        var params = {};
+        var query = null;
+        $('select#{{ title|slugify }}_select > option:selected').each(function() {
+            var key = $(this).attr('data-key');
+            if (! params.hasOwnProperty(key)) params[key] = [];
+            params[key].push($(this).val());
+            if (!query) query = $(this).attr('data-query');
+        });
+
+        // do we had selected options at all?
+        if (!query) return false;
+
+        // build up the href
+        var params_query = '';
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
+                params_query += '&' + key + '=' + params[key].join()
+            }
+        }
+        this.href = query + params_query;
+    });
+})(django.jQuery);
+</script>
