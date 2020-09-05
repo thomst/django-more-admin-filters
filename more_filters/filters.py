@@ -156,7 +156,7 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
 
 
 class MultiSelectDropdownFilter(MultiSelectFilter):
-    template = 'dropdownmultiselectfilter.html'
+    template = 'multiselectdropdownfilter.html'
 
     def choices(self, changelist):
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
@@ -191,7 +191,7 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
 
 
 class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
-    template = 'dropdownmultiselectfilter.html'
+    template = 'multiselectdropdownfilter.html'
 
     def choices(self, changelist):
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
