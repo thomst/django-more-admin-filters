@@ -2,6 +2,7 @@ __pycache__/
 .python-version
 .coverage
 .coveralls.yml
+geckodriver.log
 db.sqlite3*
 /django_more_admin_filters.egg-info/
 /build/
