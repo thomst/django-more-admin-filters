@@ -1,6 +1,6 @@
-=====================================
-Welcome to django-admin--more-filters
-=====================================
+====================================
+Welcome to django-more-admin-filters
+====================================
 
 .. image:: https://travis-ci.com/thomst/django-more-admin-filters.svg?branch=master
     :target: https://travis-ci.com/thomst/django-more-admin-filters
