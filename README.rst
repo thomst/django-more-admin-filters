@@ -50,4 +50,22 @@ Use the filter classes with your ModelAdmin::
 
 Filter classes
 ==============
-TODO
+
+* **DropdownFilter**
+    Dropdown filter for all kind of fields.
+* **ChoicesDropdownFilter**
+    Dropdown filter for fields using choices.
+* **RelatedDropdownFilter**
+    Dropdown filter for relation fields.
+* **RelatedOnlyDropdownFilter**
+    Dropdown filter for relation fields using limit_choices_to.
+* **MultiSelectFilter**
+    Multi select filter for all kind of fields.
+* **MultiSelectRelatedFilter**
+    Multi select filter for relation fields.
+* **MultiSelectDropdownFilter**
+    Multi select dropdown filter for all kind of fields.
+* **MultiSelectRelatedDropdownFilter**
+    Multi select dropdown filter for relation fields.
+* **BooleanAnnotationFilter**
+    Filter for annotated boolean-attributes.
