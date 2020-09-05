@@ -14,7 +14,8 @@ Welcome to django-admin--more-filters
 Description
 ===========
 Django-more-admin-filters is a collection of django admin filters with a focus
-on filters allowing multiple choices and the support of dropdown widgets.
+on filters using dropdown widgets, multiple choice filters and filters working
+with annotated attributes.
 
 
 Installation
