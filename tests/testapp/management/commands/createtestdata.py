@@ -7,7 +7,7 @@ from django.core.management.base import CommandError
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 
-from ...models import ModelA, ModelB
+from ...models import ModelA, ModelB, ModelC
 
 
 def create_test_data():
@@ -23,12 +23,17 @@ def create_test_data():
     ModelA.objects.all().delete()
     ModelB.objects.all().delete()
 
+    c_models = list()
     for i in range(1, 30):
         model_a = ModelA()
         model_b = ModelB()
+        model_c = ModelC()
 
         model_b.id = i
         model_b.save()
+        model_c.id = i
+        model_c.save()
+        c_models.append(model_c)
 
         model_a.dropdown_less_than_four = i % 3
         model_a.dropdown_more_than_three = i % 4
@@ -39,6 +44,7 @@ def create_test_data():
         model_a.multiselect_related = model_b
         model_a.multiselect_related_dropdown = model_b
         model_a.save()
+        model_a.c_models.set(c_models)
 
 
 class Command(BaseCommand):

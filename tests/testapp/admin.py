@@ -4,8 +4,7 @@ from django.contrib import admin
 from more_filters import (
     MultiSelectFilter, MultiSelectRelatedFilter, MultiSelectDropdownFilter,
     MultiSelectRelatedDropdownFilter, DropdownFilter, ChoicesDropdownFilter,
-    RelatedDropdownFilter, PlusMinusFilter, AnnotationListFilter,
-    BooleanAnnotationListFilter
+    RelatedDropdownFilter, BooleanAnnotationFilter
 )
 from .models import ModelA
 from .models import ModelB
@@ -23,6 +22,8 @@ class ModelAAdmin(admin.ModelAdmin):
         'related_dropdown',
         'multiselect_related',
         'multiselect_related_dropdown',
+        'annotation_view',
+        'boolean_annotation_view',
     )
 
     list_filter = (
@@ -34,4 +35,11 @@ class ModelAAdmin(admin.ModelAdmin):
         ('related_dropdown', RelatedDropdownFilter),
         ('multiselect_related', MultiSelectRelatedFilter),
         ('multiselect_related_dropdown', MultiSelectRelatedDropdownFilter),
+        BooleanAnnotationFilter.init('boolean_annotation'),
     )
+
+    def annotation_view(self, obj):
+        return obj.annotation
+
+    def boolean_annotation_view(self, obj):
+        return obj.boolean_annotation
