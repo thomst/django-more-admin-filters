@@ -69,3 +69,6 @@ Filter classes
     Multi select dropdown filter for relation fields.
 * **BooleanAnnotationFilter**
     Filter for annotated boolean-attributes.
+
+
+.. note:: More kind of annotation filters will be added in future versions.
