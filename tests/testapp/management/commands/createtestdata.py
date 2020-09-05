@@ -35,8 +35,8 @@ def create_test_data():
         model_c.save()
         c_models.append(model_c)
 
-        model_a.dropdown_less_than_four = i % 3
-        model_a.dropdown_more_than_three = i % 4
+        model_a.dropdown_lte3 = i % 3
+        model_a.dropdown_gt3 = i % 4
         model_a.choices_dropdown = i % 9 +1
         model_a.multiselect = i % 4
         model_a.multiselect_dropdown = i % 4

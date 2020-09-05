@@ -29,8 +29,8 @@ class ModelA(models.Model):
         ('8', 'eight'),
         ('9', 'nine'),
     )
-    dropdown_less_than_four = models.IntegerField()
-    dropdown_more_than_three = models.IntegerField()
+    dropdown_lte3 = models.IntegerField()
+    dropdown_gt3 = models.IntegerField()
     multiselect = models.IntegerField()
     multiselect_dropdown = models.IntegerField()
     choices_dropdown = models.CharField(max_length=255, blank=True, choices=CHOICES)

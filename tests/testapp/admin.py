@@ -12,10 +12,10 @@ from .models import ModelB
 
 @admin.register(ModelA)
 class ModelAAdmin(admin.ModelAdmin):
-    search_fields = ('dropdown_less_than_four',)
+    search_fields = ('dropdown_lte3',)
     list_display = (
-        'dropdown_less_than_four',
-        'dropdown_more_than_three',
+        'dropdown_lte3',
+        'dropdown_gt3',
         'multiselect',
         'multiselect_dropdown',
         'choices_dropdown',
@@ -27,8 +27,8 @@ class ModelAAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
-        ('dropdown_less_than_four', DropdownFilter),
-        ('dropdown_more_than_three', DropdownFilter),
+        ('dropdown_lte3', DropdownFilter),
+        ('dropdown_gt3', DropdownFilter),
         ('multiselect', MultiSelectFilter),
         ('multiselect_dropdown', MultiSelectDropdownFilter),
         ('choices_dropdown', ChoicesDropdownFilter),
