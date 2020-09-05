@@ -47,7 +47,7 @@ install:
   - pip install -U pip setuptools coveralls
   - pip install $REQ
   - pip install --editable .
-script: "coverage run --source more_filters/ tests/manage.py test testapp"
+script: "coverage run --source more_admin_filters/ tests/manage.py test testapp"
 after_success:
   - coverage report
   - coveralls

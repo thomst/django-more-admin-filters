@@ -1,3 +1,3 @@
 include LICENSE
 include README.rst
-recursive-include more_filters/templates *
+recursive-include more_admin_filters/templates *

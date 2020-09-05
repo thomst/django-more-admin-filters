@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from more_filters import (
+from more_admin_filters import (
     MultiSelectFilter, MultiSelectRelatedFilter, MultiSelectDropdownFilter,
     MultiSelectRelatedDropdownFilter, DropdownFilter, ChoicesDropdownFilter,
     RelatedDropdownFilter, BooleanAnnotationFilter

@@ -13,7 +13,7 @@ Welcome to django-admin--more-filters
 
 Description
 ===========
-Django-admin-more-filters is a collection of django admin filters with a focus
+Django-more-admin-filters is a collection of django admin filters with a focus
 on filters allowing multiple choices and the support of dropdown widgets.
 
 
@@ -21,18 +21,18 @@ Installation
 ============
 Install from pypi.org::
 
-    pip install django-admin-more-filters
+    pip install django-more-admin-filters
 
-Add more_filters to your installed apps::
+Add more_admin_filters to your installed apps::
 
     INSTALLED_APPS = [
-        'more_filters',
+        'more_admin_filters',
         ...
     ]
 
 Use the filter classes with your ModelAdmin::
 
-    from more_filters import MultiSelectDropdownFilter
+    from more_admin_filters import MultiSelectDropdownFilter
 
     class MyModelAdmin(admin.ModelAdmin):
         ...

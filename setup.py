@@ -11,7 +11,7 @@ def read(filename):
         return file.read()
 
 
-version = __import__("more_filters").__version__
+version = __import__("more_admin_filters").__version__
 if '-dev' in version:
     dev_status = 'Development Status :: 3 - Alpha'
 elif '-beta' in version:
@@ -21,7 +21,7 @@ else:
 
 
 setup(
-    name="django-admin-more-filters",
+    name="django-more-admin-filters",
     version=version,
     description="Additional filters for django-admin.",
     long_description=read("README.rst"),

@@ -3,7 +3,7 @@ __pycache__/
 .coverage
 .coveralls.yml
 db.sqlite3*
-/django_admin_more_filters.egg-info/
+/django_more_admin_filters.egg-info/
 /build/
 /dist/
 /.tox/
