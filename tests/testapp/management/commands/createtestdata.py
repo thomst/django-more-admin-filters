@@ -23,8 +23,9 @@ def create_test_data():
     ModelA.objects.all().delete()
     ModelB.objects.all().delete()
 
+    # TODO: create null values as well
     c_models = list()
-    for i in range(1, 30):
+    for i in range(1, 36):
         model_a = ModelA()
         model_b = ModelB()
         model_c = ModelC()
@@ -38,8 +39,8 @@ def create_test_data():
         model_a.dropdown_lte3 = i % 3
         model_a.dropdown_gt3 = i % 4
         model_a.choices_dropdown = i % 9 +1
-        model_a.multiselect = i % 4
-        model_a.multiselect_dropdown = i % 4
+        model_a.multiselect = i % 5
+        model_a.multiselect_dropdown = i % 6
         model_a.related_dropdown = model_b
         model_a.multiselect_related = model_b
         model_a.multiselect_related_dropdown = model_b
