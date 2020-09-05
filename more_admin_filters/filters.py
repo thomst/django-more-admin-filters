@@ -16,22 +16,33 @@ from django.contrib.admin.filters import RelatedOnlyFieldListFilter
 
 # Generic filter using a dropdown widget instead of a list.
 class DropdownFilter(AllValuesFieldListFilter):
+    """
+    Dropdown filter for all kind of fields.
+    """
     template = 'more_admin_filters/dropdownfilter.html'
 
 
 class ChoicesDropdownFilter(ChoicesFieldListFilter):
+    """
+    Dropdown filter for fields using choices.
+    """
     template = 'more_admin_filters/dropdownfilter.html'
 
 
 class RelatedDropdownFilter(RelatedFieldListFilter):
+    """
+    Dropdown filter for relation fields.
+    """
     template = 'more_admin_filters/dropdownfilter.html'
 
 
 class RelatedOnlyDropdownFilter(RelatedOnlyFieldListFilter):
+    """
+    Dropdown filter for relation fields using limit_choices_to.
+    """
     template = 'more_admin_filters/dropdownfilter.html'
 
 
-# Generic filter supporting multiple selection.
 class MultiSelectMixin(object):
     def queryset(self, request, queryset):
         params = Q()
@@ -74,6 +85,9 @@ class MultiSelectMixin(object):
 
 
 class MultiSelectFilter(MultiSelectMixin, admin.AllValuesFieldListFilter):
+    """
+    Multi select filter for all kind of fields.
+    """
     def __init__(self, field, request, params, model, model_admin, field_path):
         self.lookup_kwarg = '%s__in' % field_path
         self.lookup_kwarg_isnull = '%s__isnull' % field_path
@@ -133,6 +147,9 @@ class MultiSelectFilter(MultiSelectMixin, admin.AllValuesFieldListFilter):
 
 
 class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
+    """
+    Multi select filter for relation fields.
+    """
     def __init__(self, field, request, params, model, model_admin, field_path):
         other_model = get_model_from_relation(field)
         self.lookup_kwarg = '%s__%s__in' % (field_path, field.target_field.name)
@@ -174,6 +191,9 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
 
 
 class MultiSelectDropdownFilter(MultiSelectFilter):
+    """
+    Multi select dropdown filter for all kind of fields.
+    """
     template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
@@ -209,6 +229,9 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
 
 
 class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
+    """
+    Multi select dropdown filter for relation fields.
+    """
     template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
@@ -238,12 +261,12 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
 
 
 # Filter for annotated attributes.
+# NOTE: The code is more or less the same than admin.FieldListFilter but
+# we must not subclass it. Otherwise django's filter setup routine wants a real
+# model field.
 class BaseAnnotationFilter(admin.ListFilter):
     """
     Baseclass for annotation-list-filters.
-
-    This is more or less a rewrite of admin.FieldListFilter. But we must not
-    subclass it to not confuse django's filter-setup-routine.
     """
     attribute_name = None
     nullable_attribute = None
@@ -285,12 +308,12 @@ class BaseAnnotationFilter(admin.ListFilter):
             raise IncorrectLookupParameters(e)
 
 
+# NOTE: The code is more or less the same than admin.BooleanFieldListFilter but
+# we must not subclass it. Otherwise django's filter setup routine wants a real
+# model field.
 class BooleanAnnotationFilter(BaseAnnotationFilter):
     """
     Filter for annotated boolean-attributes.
-
-    This is more or less the same than admin.BooleanFieldListFilter but for
-    annotated attributes.
     """
     def __init__(self, request, params, model, model_admin):
         self.lookup_kwarg = '%s__exact' % self.attribute_name
