@@ -2,6 +2,12 @@
 Welcome to django-admin--more-filters
 =====================================
 
+.. image:: https://travis-ci.com/thomst/django-more-admin-filters.svg?branch=master
+    :target: https://travis-ci.com/thomst/django-more-admin-filters
+    
+.. image:: https://coveralls.io/repos/github/thomst/django-more-admin-filters/badge.svg?branch=master
+    :target: https://coveralls.io/github/thomst/django-more-admin-filters?branch=master
+
 .. image:: https://img.shields.io/badge/python-3.4%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue
    :target: https://img.shields.io/badge/python-3.4%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue
    :alt: python: 3.4, 3.5, 3.6, 3.7, 3.8
