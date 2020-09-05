@@ -43,6 +43,9 @@ class ModelA(models.Model):
 class ModelB(models.Model):
     id = models.AutoField(primary_key=True)
 
+    def __str__(self):
+        return 'ModelB {}'.format(self.id)
+
 
 class ModelC(models.Model):
     id = models.AutoField(primary_key=True)
