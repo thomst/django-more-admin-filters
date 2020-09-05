@@ -34,8 +34,8 @@ class FilterTest(TestCase):
 
     def test_02_filtering(self):
         queries = (
-            ('', 35),
-            ('dropdown_gt3=1&dropdown_lte3=0', 3),
+            ('', 36),
+            ('dropdown_gt3=1&dropdown_lte3__isnull=True', 3),
             ('dropdown_gt3=1&multiselect_dropdown__in=3', 3),
             ('dropdown_gt3=1&multiselect_dropdown__in=3,4,5', 6),
             ('choices_dropdown__exact=3&multiselect_dropdown__in=0,1,2', 2),
@@ -49,4 +49,3 @@ class FilterTest(TestCase):
             resp = self.client.get(self.url + '?' + query)
             self.assertEqual(resp.status_code, 200)
             self.assertIn('{} selected'.format(count), resp.content.decode('utf8'))
-

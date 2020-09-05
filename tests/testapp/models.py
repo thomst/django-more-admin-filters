@@ -29,14 +29,29 @@ class ModelA(models.Model):
         ('8', 'eight'),
         ('9', 'nine'),
     )
-    dropdown_lte3 = models.IntegerField()
-    dropdown_gt3 = models.IntegerField()
-    multiselect = models.IntegerField()
-    multiselect_dropdown = models.IntegerField()
-    choices_dropdown = models.CharField(max_length=255, blank=True, choices=CHOICES)
-    related_dropdown = models.ForeignKey('ModelB', on_delete=models.CASCADE, related_name='related_dropdown_reverse')
-    multiselect_related = models.ForeignKey('ModelB', on_delete=models.CASCADE, related_name='multiselect_related_reverse')
-    multiselect_related_dropdown = models.ForeignKey('ModelB', on_delete=models.CASCADE, related_name='multiselect_related_dropdown_reverse')
+    dropdown_lte3 = models.IntegerField(blank=True, null=True)
+    dropdown_gt3 = models.IntegerField(blank=True, null=True)
+    multiselect = models.IntegerField(blank=True, null=True)
+    multiselect_dropdown = models.IntegerField(blank=True, null=True)
+    choices_dropdown = models.CharField(max_length=255, blank=True, null=True, choices=CHOICES)
+    related_dropdown = models.ForeignKey(
+        'ModelB',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='related_dropdown_reverse')
+    multiselect_related = models.ForeignKey(
+        'ModelB',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='multiselect_related_reverse')
+    multiselect_related_dropdown = models.ForeignKey(
+        'ModelB',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='multiselect_related_dropdown_reverse')
     c_models = models.ManyToManyField('ModelC')
 
 

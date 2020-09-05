@@ -65,19 +65,19 @@ class LiveFilterTest(StaticLiveServerTestCase):
         select_id = 'dropdown-gt3_filter_select'
         url_query = 'dropdown_gt3=2'
         self.use_dropdown_filter(select_id, '2', url_query, 9)
-        self.use_dropdown_filter(select_id, 'All', '', 35)
+        self.use_dropdown_filter(select_id, 'All', '', 36)
 
         # Check the choices dropdown filter:
         select_id = 'choices-dropdown_filter_select'
         url_query = 'choices_dropdown__exact=3'
         self.use_dropdown_filter(select_id, 'three', url_query, 4)
-        self.use_dropdown_filter(select_id, 'All', '', 35)
+        self.use_dropdown_filter(select_id, 'All', '', 36)
 
         # # Check the related dropdown filter:
         select_id = 'related-dropdown_filter_select'
         url_query = 'related_dropdown__id__exact=9'
         self.use_dropdown_filter(select_id, 'ModelB 9', url_query, 1)
-        self.use_dropdown_filter(select_id, 'All', '', 35)
+        self.use_dropdown_filter(select_id, 'All', '', 36)
 
     def use_multiselect_link(self, ul_num, li_num, item_count, selected_count, url_query):
         link = '//*[@id="changelist-filter"]/ul[{}]/li[{}]/a'.format(ul_num, li_num)
