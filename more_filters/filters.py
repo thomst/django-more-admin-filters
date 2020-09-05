@@ -14,6 +14,24 @@ from django.contrib.admin.filters import RelatedFieldListFilter
 from django.contrib.admin.filters import RelatedOnlyFieldListFilter
 
 
+# Generic filter using a dropdown widget instead of a list.
+class DropdownFilter(AllValuesFieldListFilter):
+    template = 'dropdownfilter.html'
+
+
+class ChoicesDropdownFilter(ChoicesFieldListFilter):
+    template = 'dropdownfilter.html'
+
+
+class RelatedDropdownFilter(RelatedFieldListFilter):
+    template = 'dropdownfilter.html'
+
+
+class RelatedOnlyDropdownFilter(RelatedOnlyFieldListFilter):
+    template = 'dropdownfilter.html'
+
+
+# Generic filter supporting multiple selection.
 class MultiSelectMixin(object):
     def queryset(self, request, queryset):
         params = Q()
@@ -219,22 +237,7 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
             }
 
 
-class DropdownFilter(AllValuesFieldListFilter):
-    template = 'dropdownfilter.html'
-
-
-class ChoicesDropdownFilter(ChoicesFieldListFilter):
-    template = 'dropdownfilter.html'
-
-
-class RelatedDropdownFilter(RelatedFieldListFilter):
-    template = 'dropdownfilter.html'
-
-
-class RelatedOnlyDropdownFilter(RelatedOnlyFieldListFilter):
-    template = 'dropdownfilter.html'
-
-
+# Filter for annotated attributes.
 class BaseAnnotationFilter(admin.ListFilter):
     """
     Baseclass for annotation-list-filters.
