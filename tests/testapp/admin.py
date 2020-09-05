@@ -6,6 +6,7 @@ from more_admin_filters import (
     MultiSelectRelatedDropdownFilter, DropdownFilter, ChoicesDropdownFilter,
     RelatedDropdownFilter, BooleanAnnotationFilter
 )
+from more_admin_filters import apps
 from .models import ModelA
 from .models import ModelB
 
