@@ -235,46 +235,7 @@ class RelatedOnlyDropdownFilter(RelatedOnlyFieldListFilter):
     template = 'dropdownfilter.html'
 
 
-class PlusMinusFilter(admin.AllValuesFieldListFilter):
-    """
-    PlusMinusFilter
-    """
-
-    template = 'plusminusfilter.html'
-
-    def queryset(self, request, queryset):
-        if self.lookup_val is None: return queryset
-        sign = self.lookup_val[0]
-        value = self.lookup_val[1:]
-        if sign == '-':
-            return queryset.exclude(**{self.field_path:value})
-        elif sign == '+':
-            return queryset.filter(**{self.field_path:value})
-
-    def choices(self, changelist):
-        yield {
-            'selected': self.lookup_val is None,
-            'query_string': changelist.get_query_string({}, [self.lookup_kwarg]),
-            'display': _('All'),
-        }
-        for lookup in self.lookup_choices:
-            plus_lookup = '+' + lookup
-            minus_lookup = '-' + lookup
-            yield {
-                'display': lookup,
-                'selected': self.lookup_val and self.lookup_val[1:] == force_text(lookup),
-                'plus': {
-                    'selected': self.lookup_val == force_text(plus_lookup),
-                    'query_string': changelist.get_query_string({self.lookup_kwarg: plus_lookup}, []),
-                },
-                'minus': {
-                    'selected': self.lookup_val == force_text(minus_lookup),
-                    'query_string': changelist.get_query_string({self.lookup_kwarg: minus_lookup}, []),
-                }
-            }
-
-
-class AnnotationListFilter(admin.ListFilter):
+class BaseAnnotationFilter(admin.ListFilter):
     """
     Baseclass for annotation-list-filters.
 
@@ -294,15 +255,15 @@ class AnnotationListFilter(admin.ListFilter):
 
             MyModelAdmin(admin.ModelAdmin):
                 list_filter = [
-                    MyAnnotationListFilter.init('my_attribute'),
+                    MyAnnotationListFilter.init('my_annotated_attribute'),
                 ]
         """
         attrs = dict(attribute_name=attribute_name, nullable=nullable)
         cls = type('cls.__name__' + attribute_name, (cls,), attrs)
         return cls
 
-    def __init__(self, attribute_name, request, params, model, model_admin):
-        self.title = attribute_name
+    def __init__(self, request, params, model, model_admin):
+        self.title = self.attribute_name
         super().__init__(request, params, model, model_admin)
         for p in self.expected_parameters():
             if p in params:
@@ -321,7 +282,7 @@ class AnnotationListFilter(admin.ListFilter):
             raise IncorrectLookupParameters(e)
 
 
-class BooleanAnnotationListFilter(AnnotationListFilter):
+class BooleanAnnotationFilter(BaseAnnotationFilter):
     """
     Filter for annotated boolean-attributes.
 
@@ -333,7 +294,7 @@ class BooleanAnnotationListFilter(AnnotationListFilter):
         self.lookup_kwarg2 = '%s__isnull' % self.attribute_name
         self.lookup_val = params.get(self.lookup_kwarg)
         self.lookup_val2 = params.get(self.lookup_kwarg2)
-        super().__init__(self.attribute_name, request, params, model, model_admin)
+        super().__init__(request, params, model, model_admin)
         if (self.used_parameters and self.lookup_kwarg in self.used_parameters and
                 self.used_parameters[self.lookup_kwarg] in ('1', '0')):
             self.used_parameters[self.lookup_kwarg] = bool(int(self.used_parameters[self.lookup_kwarg]))
