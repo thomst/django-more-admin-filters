@@ -16,19 +16,19 @@ from django.contrib.admin.filters import RelatedOnlyFieldListFilter
 
 # Generic filter using a dropdown widget instead of a list.
 class DropdownFilter(AllValuesFieldListFilter):
-    template = 'dropdownfilter.html'
+    template = 'more_admin_filters/dropdownfilter.html'
 
 
 class ChoicesDropdownFilter(ChoicesFieldListFilter):
-    template = 'dropdownfilter.html'
+    template = 'more_admin_filters/dropdownfilter.html'
 
 
 class RelatedDropdownFilter(RelatedFieldListFilter):
-    template = 'dropdownfilter.html'
+    template = 'more_admin_filters/dropdownfilter.html'
 
 
 class RelatedOnlyDropdownFilter(RelatedOnlyFieldListFilter):
-    template = 'dropdownfilter.html'
+    template = 'more_admin_filters/dropdownfilter.html'
 
 
 # Generic filter supporting multiple selection.
@@ -174,7 +174,7 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
 
 
 class MultiSelectDropdownFilter(MultiSelectFilter):
-    template = 'multiselectdropdownfilter.html'
+    template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
@@ -209,7 +209,7 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
 
 
 class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
-    template = 'multiselectdropdownfilter.html'
+    template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
