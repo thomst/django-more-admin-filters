@@ -60,7 +60,8 @@ class LiveFilterTest(StaticLiveServerTestCase):
     def test_01_filter(self):
         self.selenium.get(self.live_server_url + self.url_path)
 
-        # Check the dropdown filter: changing the select input should trigger a reload.
+        # Check the simple dropdown filter:
+        # changing the selection should trigger a reload.
         item_count = 9
         option_text = '2'
         url_query = 'dropdown_gt3=2'
@@ -80,3 +81,13 @@ class LiveFilterTest(StaticLiveServerTestCase):
         self.click_multiselect_link(3, 5, 4, 2, 'multiselect__in=4,2')
         self.click_multiselect_link(3, 1, 9, 1, '')
         self.assertNotIn('multiselect__in', self.get_url_query())
+
+        # check the multiselect related filter
+        # (the dropdown_gt3 filter is still effectual)
+        self.click_multiselect_link(7, 35, 1, 1, 'multiselect_related__id__in=34')
+        self.click_multiselect_link(7, 31, 2, 2, 'multiselect_related__id__in=34,30')
+        self.click_multiselect_link(7, 27, 3, 3, 'multiselect_related__id__in=34,30,26')
+        self.click_multiselect_link(7, 26, 3, 4, 'multiselect_related__id__in=34,30,26,25')
+        self.click_multiselect_link(7, 35, 2, 3, 'multiselect_related__id__in=30,26,25')
+        self.click_multiselect_link(7, 1, 9, 1, '')
+        self.assertNotIn('multiselect_related__id__in', self.get_url_query())
