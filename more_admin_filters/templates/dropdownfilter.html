@@ -17,10 +17,12 @@
 {% endif %}
 </ul>
 
-<script>
-(function($) {
-    $('select#{{ title|slugify }}_filter_select').change(function(evt) {
-        window.location.href = $(this).val();
-    });
-})(django.jQuery);
-</script>
+{% if choices|slice:"4:" %}
+    <script>
+    (function($) {
+        $('select#{{ title|slugify }}_filter_select').change(function(evt) {
+            window.location.href = $(this).val();
+        });
+    })(django.jQuery);
+    </script>
+{% endif %}
