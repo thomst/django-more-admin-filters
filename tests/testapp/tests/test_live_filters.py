@@ -19,6 +19,8 @@ class LiveFilterTest(StaticLiveServerTestCase):
         options.headless = True
         cls.selenium = WebDriver(options=options)
         cls.selenium.implicitly_wait(10)
+        cls.url_path = reverse('admin:testapp_modela_changelist')
+        create_test_data()
 
     @classmethod
     def tearDownClass(cls):
@@ -26,11 +28,6 @@ class LiveFilterTest(StaticLiveServerTestCase):
         super().tearDownClass()
 
     def setUp(self):
-        create_test_data()
-        self.admin = User.objects.get(username='admin')
-        self.client.force_login(self.admin)
-        self.url_path = reverse('admin:testapp_modela_changelist')
-
         # login to selenium - using a cookie from the django test client
         admin = User.objects.get(username='admin')
         self.client.force_login(admin)
@@ -58,7 +55,27 @@ class LiveFilterTest(StaticLiveServerTestCase):
         self.assertEqual(self.get_url_query(), url_query)
         self.assertEqual(select.first_selected_option.text, option)
 
-    def test_01_dropdown_filter(self):
+    def use_multiselect_link(self, ul_num, title, item_count, selected_count, url_query):
+        link = '//*[@id="changelist-filter"]/ul[{}]/li/a[@title="{}"]'.format(ul_num, title)
+        self.selenium.find_element_by_xpath(link).click()
+        self.selenium.refresh()
+        self.assertIn(url_query, self.get_url_query())
+        self.assertEqual(self.get_item_count(), item_count)
+        self.assertEqual(len(self.get_selected_list_items(ul_num)), selected_count)
+
+    def use_multiselect_dropdown_filter(self, field, options, url_param, count):
+        select = Select(self.selenium.find_element_by_id(field + '_select'))
+        for value in options:
+            select.select_by_value(value)
+        self.selenium.find_element_by_id(field + '_submit').click()
+        self.selenium.refresh()
+        select = Select(self.selenium.find_element_by_id(field + '_select'))
+        self.assertIn(url_param + '=' + ','.join(options), self.get_url_query())
+        self.assertEqual(len(select.all_selected_options), len(options))
+        self.assertEqual(self.get_item_count(), count)
+        select.deselect_all()
+
+    def test_01_check_filter(self):
         self.selenium.get(self.live_server_url + self.url_path)
 
         # Check the simple dropdown filter:
@@ -79,48 +96,26 @@ class LiveFilterTest(StaticLiveServerTestCase):
         self.use_dropdown_filter(select_id, 'ModelB 9', url_query, 1)
         self.use_dropdown_filter(select_id, 'All', '', 36)
 
-    def use_multiselect_link(self, ul_num, li_num, item_count, selected_count, url_query):
-        link = '//*[@id="changelist-filter"]/ul[{}]/li[{}]/a'.format(ul_num, li_num)
-        self.selenium.find_element_by_xpath(link).click()
-        self.selenium.refresh()
-        self.assertEqual(self.get_item_count(), item_count)
-        self.assertIn(url_query, self.get_url_query())
-        self.assertEqual(len(self.get_selected_list_items(ul_num)), selected_count)
-
-    def test_02_multiselect_filter(self):
-        # test with activated dropdown_gt3 filter
+        # Start tests with activated dropdown_gt3 filter
         self.selenium.get(self.live_server_url + self.url_path + '?dropdown_gt3=2')
 
         # Check the simple multiselect filter
-        self.use_multiselect_link(3, 6, 2, 1, 'multiselect__in=4')
-        self.use_multiselect_link(3, 5, 3, 2, 'multiselect__in=4,3')
-        self.use_multiselect_link(3, 4, 5, 3, 'multiselect__in=4,3,2')
-        self.use_multiselect_link(3, 5, 4, 2, 'multiselect__in=4,2')
-        self.use_multiselect_link(3, 1, 9, 1, '')
+        self.use_multiselect_link(3, '4', 2, 1, 'multiselect__in=4')
+        self.use_multiselect_link(3, '3', 3, 2, 'multiselect__in=4,3')
+        self.use_multiselect_link(3, '2', 5, 3, 'multiselect__in=4,3,2')
+        self.use_multiselect_link(3, '3', 4, 2, 'multiselect__in=4,2')
+        self.use_multiselect_link(3, 'All', 9, 1, '')
         self.assertNotIn('multiselect__in', self.get_url_query())
 
         # check the multiselect related filter
-        self.use_multiselect_link(7, 35, 1, 1, 'multiselect_related__id__in=34')
-        self.use_multiselect_link(7, 31, 2, 2, 'multiselect_related__id__in=34,30')
-        self.use_multiselect_link(7, 27, 3, 3, 'multiselect_related__id__in=34,30,26')
-        self.use_multiselect_link(7, 26, 3, 4, 'multiselect_related__id__in=34,30,26,25')
-        self.use_multiselect_link(7, 35, 2, 3, 'multiselect_related__id__in=30,26,25')
-        self.use_multiselect_link(7, 1, 9, 1, '')
+        self.use_multiselect_link(7, 'ModelB 34', 1, 1, 'multiselect_related__id__in=34')
+        self.use_multiselect_link(7, 'ModelB 30', 2, 2, 'multiselect_related__id__in=34,30')
+        self.use_multiselect_link(7, 'ModelB 26', 3, 3, 'multiselect_related__id__in=34,30,26')
+        self.use_multiselect_link(7, 'ModelB 34', 2, 2, 'multiselect_related__id__in=30,26')
+        self.use_multiselect_link(7, 'All', 9, 1, '')
         self.assertNotIn('multiselect_related__id__in', self.get_url_query())
 
-    def use_multiselect_dropdown_filter(self, field, options, url_param, count):
-        select = Select(self.selenium.find_element_by_id(field + '_select'))
-        for value in options:
-            select.select_by_value(value)
-        self.selenium.find_element_by_id(field + '_submit').click()
-        self.selenium.refresh()
-        select = Select(self.selenium.find_element_by_id(field + '_select'))
-        self.assertIn(url_param + '=' + ','.join(options), self.get_url_query())
-        self.assertEqual(len(select.all_selected_options), len(options))
-        self.assertEqual(self.get_item_count(), count)
-        select.deselect_all()
-
-    def test_03_multiselect_dropdown_filter(self):
+        # Start tests without any filter.
         self.selenium.get(self.live_server_url + self.url_path)
 
         # check multiselect-dropdown
