@@ -3,6 +3,8 @@
 import os
 import sys
 
+sys.path.insert(1, os.path.abspath('..'))
+
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'testapp.settings')
