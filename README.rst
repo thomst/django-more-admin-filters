@@ -4,7 +4,7 @@ Welcome to django-more-admin-filters
 
 .. image:: https://travis-ci.com/thomst/django-more-admin-filters.svg?branch=master
     :target: https://travis-ci.com/thomst/django-more-admin-filters
-    
+
 .. image:: https://coveralls.io/repos/github/thomst/django-more-admin-filters/badge.svg?branch=master
     :target: https://coveralls.io/github/thomst/django-more-admin-filters?branch=master
 
@@ -59,6 +59,10 @@ Filter classes
     Dropdown filter for relation fields.
 * **RelatedOnlyDropdownFilter**
     Dropdown filter for relation fields using limit_choices_to.
+* **MultiSelectChoicesFilter**
+    Multi select filter for choices.
+* **MultiSelectChoicesDropdownFilter**
+    Multi select dropdown filter for choices.
 * **MultiSelectFilter**
     Multi select filter for all kind of fields.
 * **MultiSelectRelatedFilter**
