@@ -45,7 +45,18 @@ Use the filter classes with your ModelAdmin::
         ...
         list_filter = [
             ('myfield', MultiSelectDropdownFilter),
+            ...
         ]
+
+Since the ModelAdmin routine to initialize the list filters doesn't work with
+annotated attributes the usage for an annotation filter is a little bit special.
+The filter class needs to be equipped with the attribute's name::
+
+    MyModelAdmin(admin.ModelAdmin):
+    list_filter = [
+        BooleanAnnotationFilter.init('my_annotated_attribute'),
+        ...
+    ]
 
 
 Filter classes
