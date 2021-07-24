@@ -32,7 +32,7 @@ setup(
     packages=find_packages(exclude=["tests"]),
     include_package_data=True,
     install_requires=[
-        "Django>=1.11,<=3.2",
+        "Django>=1.11,<3.3",
     ],
     classifiers=[
         dev_status,
