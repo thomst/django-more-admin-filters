@@ -190,6 +190,19 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
             }
 
 
+class MultiSelectRelatedOnlyFilter(MultiSelectRelatedFilter):
+    def field_choices(self, field, request, model_admin):
+        pk_qs = (
+            model_admin.get_queryset(request)
+            .distinct()
+            .values_list("%s__pk" % self.field_path, flat=True)
+        )
+        ordering = self.field_admin_ordering(field, request, model_admin)
+        return field.get_choices(
+            include_blank=False, limit_choices_to={"pk__in": pk_qs}, ordering=ordering
+        )
+
+
 class MultiSelectDropdownFilter(MultiSelectFilter):
     """
     Multi select dropdown filter for all kind of fields.
