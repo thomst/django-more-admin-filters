@@ -2,7 +2,6 @@
 from django.contrib.admin.utils import prepare_lookup_value
 from django.contrib import admin
 from django.db.models import Q
-from django.utils.encoding import force_text
 from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.utils import reverse_field_path
 from django.contrib.admin.utils import get_model_from_relation
