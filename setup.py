@@ -20,6 +20,7 @@ def read(filename):
         return file.read()
 
 
+version = version()
 if "-dev" in version:
     dev_status = "Development Status :: 3 - Alpha"
 elif "-beta" in version:
@@ -30,7 +31,7 @@ else:
 
 setup(
     name="django-more-admin-filters",
-    version=version(),
+    version=version,
     description="Additional filters for django-admin.",
     long_description=read("README.rst"),
     author="Thomas Leichtfuß",
