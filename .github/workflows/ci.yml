@@ -37,7 +37,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install coverage wheel
+        pip install coverage wheel "selenium<4.3.0"
         pip install ${{ matrix.django-version }}
         pip install --editable ./
 
