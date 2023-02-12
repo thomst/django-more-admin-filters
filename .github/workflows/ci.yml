@@ -1,0 +1,66 @@
+name: Run tests for django-more-admin-filters
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        include:
+          - python-version: "3.7"
+            django-version: Django==2.2
+
+          - python-version: "3.7"
+            django-version: Django==3.0
+
+          - python-version: "3.8"
+            django-version: Django==3.1
+
+          - python-version: "3.8"
+            django-version: Django==3.2
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install coverage wheel
+        pip install ${{ matrix.django-version }}
+        pip install --editable ./
+
+    - name: Run Tests
+      run: coverage run --source=more_admin_filters tests/manage.py test testapp
+
+    - name: Create coverage lcov file
+      run: coverage lcov -o coverage.lcov
+
+    - name: Coveralls Parallel
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        flag-name: run-${{ matrix.python-version }}-${{ matrix.django-version }}
+        path-to-lcov: coverage.lcov
+        parallel: true
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
