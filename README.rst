@@ -2,19 +2,17 @@
 Welcome to django-more-admin-filters
 ====================================
 
-.. image:: https://travis-ci.com/thomst/django-more-admin-filters.svg?branch=master
-    :target: https://travis-ci.com/thomst/django-more-admin-filters
-    
 .. image:: https://coveralls.io/repos/github/thomst/django-more-admin-filters/badge.svg?branch=master
     :target: https://coveralls.io/github/thomst/django-more-admin-filters?branch=master
+    :alt: coveralls badge
 
-.. image:: https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue
-   :target: https://img.shields.io/badge/python-3.5%20%7C%203.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue
-   :alt: python: 3.5, 3.6, 3.7, 3.8, 3.9
+.. image:: https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue
+   :target: https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue
+   :alt: python: 3.6, 3.7, 3.8, 3.9
 
-.. image:: https://img.shields.io/badge/django-1.11%20%7C%202.0%20%7C%202.1%20%7C%202.2%20%7C%203.0%20%7C%203.1%20%7C%203.2-orange
-   :target: https://img.shields.io/badge/django-1.11%20%7C%202.0%20%7C%202.1%20%7C%202.2%20%7C%203.0%20%7C%203.1%20%7C%203.2-orange
-   :alt: django: 1.11, 2.0, 2.1, 2.2, 3.0, 3.1, 3.2
+.. image:: https://img.shields.io/badge/django-2.2%20%7C%203.0%20%7C%203.1%20%7C%203.2-orange
+   :target: https://img.shields.io/badge/django-2.2%20%7C%203.0%20%7C%203.1%20%7C%203.2-orange
+   :alt: django: 2.2, 3.0, 3.1, 3.2
 
 
 Description
