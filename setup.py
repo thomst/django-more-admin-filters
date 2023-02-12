@@ -3,6 +3,15 @@
 import os
 from setuptools import setup
 from setuptools import find_packages
+from pathlib import Path
+
+
+def version():
+    """Get the local package version."""
+    namespace = {}
+    path = Path("more_admin_filters", "__version__.py")
+    exec(path.read_text(), namespace)
+    return namespace["__version__"]
 
 
 def read(filename):
@@ -11,13 +20,13 @@ def read(filename):
         return file.read()
 
 
-version = __import__("more_admin_filters").__version__
-if 'dev' in version:
-    dev_status = 'Development Status :: 3 - Alpha'
-elif 'beta' in version:
-    dev_status = 'Development Status :: 4 - Beta'
+version = version()
+if "dev" in version:
+    dev_status = "Development Status :: 3 - Alpha"
+elif "beta" in version:
+    dev_status = "Development Status :: 4 - Beta"
 else:
-    dev_status = 'Development Status :: 5 - Production/Stable'
+    dev_status = "Development Status :: 5 - Production/Stable"
 
 
 setup(
