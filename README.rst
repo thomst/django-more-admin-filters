@@ -2,6 +2,10 @@
 Welcome to django-more-admin-filters
 ====================================
 
+.. image:: https://github.com/thomst/django-more-admin-filters/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/thomst/django-more-admin-filters/actions/workflows/ci.yml
+    :alt: Run tests for django-more-admin-filters
+
 .. image:: https://coveralls.io/repos/github/thomst/django-more-admin-filters/badge.svg?branch=master
     :target: https://coveralls.io/github/thomst/django-more-admin-filters?branch=master
     :alt: coveralls badge
