@@ -31,7 +31,7 @@ class FilterPage:
         client.force_login(admin)
         cookie = client.cookies['sessionid']
         #selenium will set cookie domain based on current page domain
-        self.selenium.get(self.base_url + '/admin/')  
+        self.selenium.get(self.base_url + '/admin/')
         self.selenium.add_cookie({'name': 'sessionid', 'value': cookie.value, 'secure': False, 'path': '/'})
         #need to update page for logged in user
         self.selenium.refresh()
