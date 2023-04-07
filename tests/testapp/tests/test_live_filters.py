@@ -68,12 +68,12 @@ class FilterPage:
         return Select(self.selenium.find_element_by_id(select_id))
 
     def use_multiselect_filter(self, ul_num, title):
-        ul_xpath = '//*[@id="changelist-filter"]/ul[{}]'.format(ul_num)
-        a_css = 'li a[title="{}"]'.format(title)
-        ul = self.selenium.find_element_by_xpath(ul_xpath)
-        ul.find_element_by_css_selector(a_css).click()
+        uls_css = '#changelist-filter ul'
+        a_xpath = f'li/a[text() = "{title}"]'
+        ul = self.selenium.find_elements_by_css_selector(uls_css)[ul_num-1]
+        ul.find_element_by_xpath(a_xpath).click()
         self.wait_for_reload()
-        return self.selenium.find_element_by_xpath(ul_xpath)
+        return self.selenium.find_elements_by_css_selector(uls_css)[ul_num-1]
 
     def use_multiselect_dropdown_filter(self, field, options):
         select = Select(self.selenium.find_element_by_id(field + '_select'))
