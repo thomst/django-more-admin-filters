@@ -1,4 +1,4 @@
-name: Run tests for django-more-admin-filters
+name: CI
 
 on:
   push:
