@@ -42,7 +42,7 @@ setup(
     packages=find_namespace_packages(exclude=["tests"]),
     include_package_data=True,
     install_requires=[
-        "Django>=2.2,<5.0",
+        "Django>=2.2,<6.0",
     ],
     classifiers=[
         dev_status,
@@ -54,6 +54,7 @@ setup(
         "Framework :: Django :: 4.0",
         "Framework :: Django :: 4.1",
         "Framework :: Django :: 4.2",
+        "Framework :: Django :: 5.0",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
