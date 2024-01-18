@@ -91,6 +91,17 @@ class MultiSelectMixin(object):
     def has_output(self):
         return len(self.lookup_choices) > 1
 
+    def get_facet_counts(self, pk_attname, filtered_qs):
+        if not self.lookup_kwarg.endswith("__in"):
+            raise NotImplementedError("Facets are only supported for default lookup_kwarg values, ending with '__in' "
+                                      "(got '%s')" % self.lookup_kwarg)
+
+        orig_lookup_kwarg = self.lookup_kwarg
+        self.lookup_kwarg = self.lookup_kwarg.removesuffix("in") + "exact"
+        counts = super().get_facet_counts(pk_attname, filtered_qs)
+        self.lookup_kwarg = orig_lookup_kwarg
+        return counts
+
 
 class MultiSelectFilter(MultiSelectMixin, admin.AllValuesFieldListFilter):
     """
@@ -130,28 +141,35 @@ class MultiSelectFilter(MultiSelectMixin, admin.AllValuesFieldListFilter):
         return used_parameters
 
     def choices(self, changelist):
+        add_facets = changelist.add_facets
+        facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         yield {
             'selected': not self.lookup_vals and self.lookup_val_isnull is None,
             'query_string': changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull]),
             'display': _('All'),
         }
         include_none = False
-        for val in self.lookup_choices:
+        count = None
+        empty_title = self.empty_value_display
+        for i, val in enumerate(self.lookup_choices):
+            if add_facets:
+                count = facet_counts[f"{i}__c"]
             if val is None:
                 include_none = True
+                empty_title = f"{empty_title} ({count})" if add_facets else empty_title
                 continue
             val = str(val)
             qval = self.prepare_querystring_value(val)
             yield {
                 'selected': qval in self.lookup_vals,
                 'query_string': self.querystring_for_choices(qval, changelist),
-                'display': val,
+                "display": f"{val} ({count})" if add_facets else val,
             }
         if include_none:
             yield {
                 'selected': bool(self.lookup_val_isnull),
                 'query_string': self.querystring_for_isnull(changelist),
-                'display': self.empty_value_display,
+                'display': empty_title,
             }
 
 
@@ -177,6 +195,8 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
         self.empty_value_display = model_admin.get_empty_value_display()
 
     def choices(self, changelist):
+        add_facets = changelist.add_facets
+        facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         yield {
             'selected': not self.lookup_vals and not self.lookup_val_isnull,
             'query_string': changelist.get_query_string(
@@ -186,6 +206,9 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
             'display': _('All'),
         }
         for pk_val, val in self.lookup_choices:
+            if add_facets:
+                count = facet_counts[f"{pk_val}__c"]
+                val = f"{val} ({count})"
             pk_val = str(pk_val)
             yield {
                 'selected': pk_val in self.lookup_vals,
@@ -193,10 +216,14 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
                 'display': val,
             }
         if self.include_empty_choice:
+            empty_title = self.empty_value_display
+            if add_facets:
+                count = facet_counts["__c"]
+                empty_title = f"{empty_title} ({count})"
             yield {
                 'selected': bool(self.lookup_val_isnull),
                 'query_string': self.querystring_for_isnull(changelist),
-                'display': self.empty_value_display,
+                'display': empty_title,
             }
 
 
@@ -220,6 +247,8 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
     template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
+        add_facets = changelist.add_facets
+        facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
         yield {
             'selected': not self.lookup_vals and self.lookup_val_isnull is None,
@@ -227,9 +256,14 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
             'display': _('All'),
         }
         include_none = False
-        for val in self.lookup_choices:
+        count = None
+        empty_title = self.empty_value_display
+        for i, val in enumerate(self.lookup_choices):
+            if add_facets:
+                count = facet_counts[f"{i}__c"]
             if val is None:
                 include_none = True
+                empty_title = f"{empty_title} ({count})" if add_facets else empty_title
                 continue
 
             val = str(val)
@@ -237,7 +271,7 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
             yield {
                 'selected': qval in self.lookup_vals,
                 'query_string': query_string,
-                'display': val,
+                "display": f"{val} ({count})" if add_facets else val,
                 'value': urllib.parse.quote_plus(val),
                 'key': self.lookup_kwarg,
             }
@@ -245,7 +279,7 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
             yield {
                 'selected': bool(self.lookup_val_isnull),
                 'query_string': query_string,
-                'display': self.empty_value_display,
+                "display": empty_title,
                 'value': 'True',
                 'key': self.lookup_kwarg_isnull,
             }
@@ -258,6 +292,8 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
     template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
+        add_facets = changelist.add_facets
+        facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
         yield {
             'selected': not self.lookup_vals and not self.lookup_val_isnull,
@@ -265,6 +301,9 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
             'display': _('All'),
         }
         for pk_val, val in self.lookup_choices:
+            if add_facets:
+                count = facet_counts[f"{pk_val}__c"]
+                val = f"{val} ({count})"
             pk_val = str(pk_val)
             yield {
                 'selected': pk_val in self.lookup_vals,
@@ -274,10 +313,14 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
                 'key': self.lookup_kwarg,
             }
         if self.include_empty_choice:
+            empty_title = self.empty_value_display
+            if add_facets:
+                count = facet_counts["__c"]
+                empty_title = f"{empty_title} ({count})"
             yield {
                 'selected': bool(self.lookup_val_isnull),
                 'query_string': query_string,
-                'display': self.empty_value_display,
+                'display': empty_title,
                 'value': 'True',
                 'key': self.lookup_kwarg_isnull,
             }
