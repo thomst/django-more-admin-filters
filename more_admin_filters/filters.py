@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import urllib.parse
 from django.contrib.admin.utils import prepare_lookup_value
 from django.contrib import admin
 from django.db.models import Q
@@ -237,7 +238,7 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
                 'selected': qval in self.lookup_vals,
                 'query_string': query_string,
                 'display': val,
-                'value': val,
+                'value': urllib.parse.quote_plus(val),
                 'key': self.lookup_kwarg,
             }
         if include_none:
