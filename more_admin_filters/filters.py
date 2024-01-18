@@ -283,6 +283,10 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
             }
 
 
+class MultiSelectRelatedOnlyDropdownFilter(MultiSelectRelatedDropdownFilter, MultiSelectRelatedOnlyFilter):
+    pass
+
+
 # Filter for annotated attributes.
 # NOTE: The code is more or less the same than admin.FieldListFilter but
 # we must not subclass it. Otherwise django's filter setup routine wants a real
