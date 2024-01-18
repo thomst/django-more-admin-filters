@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import urllib.parse
 from django.contrib.admin.utils import prepare_lookup_value
 from django.contrib import admin
 from django.db.models import Q
@@ -11,6 +12,14 @@ from django.contrib.admin.filters import AllValuesFieldListFilter
 from django.contrib.admin.filters import ChoicesFieldListFilter
 from django.contrib.admin.filters import RelatedFieldListFilter
 from django.contrib.admin.filters import RelatedOnlyFieldListFilter
+
+
+def flatten_used_parameters(used_parameters: dict, keep_list: bool = True):
+    # FieldListFilter.__init__ calls prepare_lookup_value,
+    # which returns a list if lookup_kwarg ends with "__in"
+    for k, v in used_parameters.items():
+        if len(v) == 1 and (isinstance(v[0], list) or not keep_list):
+            used_parameters[k] = v[0]
 
 
 # Generic filter using a dropdown widget instead of a list.
@@ -82,6 +91,17 @@ class MultiSelectMixin(object):
     def has_output(self):
         return len(self.lookup_choices) > 1
 
+    def get_facet_counts(self, pk_attname, filtered_qs):
+        if not self.lookup_kwarg.endswith("__in"):
+            raise NotImplementedError("Facets are only supported for default lookup_kwarg values, ending with '__in' "
+                                      "(got '%s')" % self.lookup_kwarg)
+
+        orig_lookup_kwarg = self.lookup_kwarg
+        self.lookup_kwarg = self.lookup_kwarg.removesuffix("in") + "exact"
+        counts = super().get_facet_counts(pk_attname, filtered_qs)
+        self.lookup_kwarg = orig_lookup_kwarg
+        return counts
+
 
 class MultiSelectFilter(MultiSelectMixin, admin.AllValuesFieldListFilter):
     """
@@ -105,6 +125,7 @@ class MultiSelectFilter(MultiSelectMixin, admin.AllValuesFieldListFilter):
                                .order_by(field.name)
                                .values_list(field.name, flat=True))
         super(admin.AllValuesFieldListFilter, self).__init__(field, request, params, model, model_admin, field_path)
+        flatten_used_parameters(self.used_parameters)
         self.used_parameters = self.prepare_used_parameters(self.used_parameters)
 
     def prepare_querystring_value(self, value):
@@ -120,28 +141,35 @@ class MultiSelectFilter(MultiSelectMixin, admin.AllValuesFieldListFilter):
         return used_parameters
 
     def choices(self, changelist):
+        add_facets = getattr(changelist, "add_facets", False) 
+        facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         yield {
             'selected': not self.lookup_vals and self.lookup_val_isnull is None,
             'query_string': changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull]),
             'display': _('All'),
         }
         include_none = False
-        for val in self.lookup_choices:
+        count = None
+        empty_title = self.empty_value_display
+        for i, val in enumerate(self.lookup_choices):
+            if add_facets:
+                count = facet_counts[f"{i}__c"]
             if val is None:
                 include_none = True
+                empty_title = f"{empty_title} ({count})" if add_facets else empty_title
                 continue
             val = str(val)
             qval = self.prepare_querystring_value(val)
             yield {
                 'selected': qval in self.lookup_vals,
                 'query_string': self.querystring_for_choices(qval, changelist),
-                'display': val,
+                "display": f"{val} ({count})" if add_facets else val,
             }
         if include_none:
             yield {
                 'selected': bool(self.lookup_val_isnull),
                 'query_string': self.querystring_for_isnull(changelist),
-                'display': self.empty_value_display,
+                'display': empty_title,
             }
 
 
@@ -157,6 +185,7 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
         self.lookup_vals = lookup_vals.split(',') if lookup_vals else list()
         self.lookup_val_isnull = request.GET.get(self.lookup_kwarg_isnull)
         super(admin.RelatedFieldListFilter, self).__init__(field, request, params, model, model_admin, field_path)
+        flatten_used_parameters(self.used_parameters)
         self.lookup_choices = self.field_choices(field, request, model_admin)
         if hasattr(field, 'verbose_name'):
             self.lookup_title = field.verbose_name
@@ -166,6 +195,8 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
         self.empty_value_display = model_admin.get_empty_value_display()
 
     def choices(self, changelist):
+        add_facets = getattr(changelist, "add_facets", False) 
+        facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         yield {
             'selected': not self.lookup_vals and not self.lookup_val_isnull,
             'query_string': changelist.get_query_string(
@@ -175,6 +206,9 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
             'display': _('All'),
         }
         for pk_val, val in self.lookup_choices:
+            if add_facets:
+                count = facet_counts[f"{pk_val}__c"]
+                val = f"{val} ({count})"
             pk_val = str(pk_val)
             yield {
                 'selected': pk_val in self.lookup_vals,
@@ -182,10 +216,14 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
                 'display': val,
             }
         if self.include_empty_choice:
+            empty_title = self.empty_value_display
+            if add_facets:
+                count = facet_counts["__c"]
+                empty_title = f"{empty_title} ({count})"
             yield {
                 'selected': bool(self.lookup_val_isnull),
                 'query_string': self.querystring_for_isnull(changelist),
-                'display': self.empty_value_display,
+                'display': empty_title,
             }
 
 
@@ -209,6 +247,8 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
     template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
+        add_facets = getattr(changelist, "add_facets", False) 
+        facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
         yield {
             'selected': not self.lookup_vals and self.lookup_val_isnull is None,
@@ -216,9 +256,14 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
             'display': _('All'),
         }
         include_none = False
-        for val in self.lookup_choices:
+        count = None
+        empty_title = self.empty_value_display
+        for i, val in enumerate(self.lookup_choices):
+            if add_facets:
+                count = facet_counts[f"{i}__c"]
             if val is None:
                 include_none = True
+                empty_title = f"{empty_title} ({count})" if add_facets else empty_title
                 continue
 
             val = str(val)
@@ -226,15 +271,15 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
             yield {
                 'selected': qval in self.lookup_vals,
                 'query_string': query_string,
-                'display': val,
-                'value': val,
+                "display": f"{val} ({count})" if add_facets else val,
+                'value': urllib.parse.quote_plus(val),
                 'key': self.lookup_kwarg,
             }
         if include_none:
             yield {
                 'selected': bool(self.lookup_val_isnull),
                 'query_string': query_string,
-                'display': self.empty_value_display,
+                "display": empty_title,
                 'value': 'True',
                 'key': self.lookup_kwarg_isnull,
             }
@@ -247,6 +292,8 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
     template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
+        add_facets = getattr(changelist, "add_facets", False) 
+        facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
         yield {
             'selected': not self.lookup_vals and not self.lookup_val_isnull,
@@ -254,6 +301,9 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
             'display': _('All'),
         }
         for pk_val, val in self.lookup_choices:
+            if add_facets:
+                count = facet_counts[f"{pk_val}__c"]
+                val = f"{val} ({count})"
             pk_val = str(pk_val)
             yield {
                 'selected': pk_val in self.lookup_vals,
@@ -263,13 +313,21 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
                 'key': self.lookup_kwarg,
             }
         if self.include_empty_choice:
+            empty_title = self.empty_value_display
+            if add_facets:
+                count = facet_counts["__c"]
+                empty_title = f"{empty_title} ({count})"
             yield {
                 'selected': bool(self.lookup_val_isnull),
                 'query_string': query_string,
-                'display': self.empty_value_display,
+                'display': empty_title,
                 'value': 'True',
                 'key': self.lookup_kwarg_isnull,
             }
+
+
+class MultiSelectRelatedOnlyDropdownFilter(MultiSelectRelatedDropdownFilter, MultiSelectRelatedOnlyFilter):
+    pass
 
 
 # Filter for annotated attributes.
@@ -333,6 +391,7 @@ class BooleanAnnotationFilter(BaseAnnotationFilter):
         self.lookup_val = params.get(self.lookup_kwarg)
         self.lookup_val2 = params.get(self.lookup_kwarg2)
         super().__init__(request, params, model, model_admin)
+        flatten_used_parameters(self.used_parameters, False)
         if (self.used_parameters and self.lookup_kwarg in self.used_parameters and
                 self.used_parameters[self.lookup_kwarg] in ('1', '0')):
             self.used_parameters[self.lookup_kwarg] = bool(int(self.used_parameters[self.lookup_kwarg]))
