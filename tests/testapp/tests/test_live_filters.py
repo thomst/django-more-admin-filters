@@ -4,6 +4,7 @@ import time
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import Select
@@ -52,36 +53,36 @@ class FilterPage:
 
     @property
     def item_count(self):
-        return len(self.selenium.find_elements_by_xpath('//*[@id="result_list"]/tbody/tr'))
+        return len(self.selenium.find_elements(By.XPATH, '//*[@id="result_list"]/tbody/tr'))
 
     @property
     def url_query(self):
         return self.selenium.current_url.split('?')[-1].replace('%2C', ',')
 
     def get_selected_li_count(self, ul):
-        return len(ul.find_elements_by_css_selector('li.selected'))
+        return len(ul.find_elements(By.CSS_SELECTOR, 'li.selected'))
 
     def use_dropdown_filter(self, select_id, option):
-        select = Select(self.selenium.find_element_by_id(select_id))
+        select = Select(self.selenium.find_element(By.ID, select_id))
         select.select_by_visible_text(option)
         self.wait_for_reload()
-        return Select(self.selenium.find_element_by_id(select_id))
+        return Select(self.selenium.find_element(By.ID, select_id))
 
     def use_multiselect_filter(self, ul_num, title):
         uls_css = '#changelist-filter ul'
         a_xpath = f'li/a[text() = "{title}"]'
-        ul = self.selenium.find_elements_by_css_selector(uls_css)[ul_num-1]
-        ul.find_element_by_xpath(a_xpath).click()
+        ul = self.selenium.find_elements(By.CSS_SELECTOR, uls_css)[ul_num-1]
+        ul.find_element(By.XPATH, a_xpath).click()
         self.wait_for_reload()
-        return self.selenium.find_elements_by_css_selector(uls_css)[ul_num-1]
+        return self.selenium.find_elements(By.CSS_SELECTOR, uls_css)[ul_num-1]
 
     def use_multiselect_dropdown_filter(self, field, options):
-        select = Select(self.selenium.find_element_by_id(field + '_select'))
+        select = Select(self.selenium.find_element(By.ID, field + '_select'))
         for value in options:
             select.select_by_value(value)
-        self.selenium.find_element_by_id(field + '_submit').click()
+        self.selenium.find_element(By.ID, field + '_submit').click()
         self.wait_for_reload()
-        return Select(self.selenium.find_element_by_id(field + '_select'))
+        return Select(self.selenium.find_element(By.ID, field + '_select'))
 
 
 class LiveFilterTest(StaticLiveServerTestCase):
