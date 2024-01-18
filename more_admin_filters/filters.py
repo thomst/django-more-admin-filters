@@ -13,6 +13,14 @@ from django.contrib.admin.filters import RelatedFieldListFilter
 from django.contrib.admin.filters import RelatedOnlyFieldListFilter
 
 
+def flatten_used_parameters(used_parameters: dict, keep_list: bool = True):
+    # FieldListFilter.__init__ calls prepare_lookup_value,
+    # which returns a list if lookup_kwarg ends with "__in"
+    for k, v in used_parameters.items():
+        if len(v) == 1 and (isinstance(v[0], list) or not keep_list):
+            used_parameters[k] = v[0]
+
+
 # Generic filter using a dropdown widget instead of a list.
 class DropdownFilter(AllValuesFieldListFilter):
     """
@@ -105,6 +113,7 @@ class MultiSelectFilter(MultiSelectMixin, admin.AllValuesFieldListFilter):
                                .order_by(field.name)
                                .values_list(field.name, flat=True))
         super(admin.AllValuesFieldListFilter, self).__init__(field, request, params, model, model_admin, field_path)
+        flatten_used_parameters(self.used_parameters)
         self.used_parameters = self.prepare_used_parameters(self.used_parameters)
 
     def prepare_querystring_value(self, value):
@@ -157,6 +166,7 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
         self.lookup_vals = lookup_vals.split(',') if lookup_vals else list()
         self.lookup_val_isnull = request.GET.get(self.lookup_kwarg_isnull)
         super(admin.RelatedFieldListFilter, self).__init__(field, request, params, model, model_admin, field_path)
+        flatten_used_parameters(self.used_parameters)
         self.lookup_choices = self.field_choices(field, request, model_admin)
         if hasattr(field, 'verbose_name'):
             self.lookup_title = field.verbose_name
@@ -333,6 +343,7 @@ class BooleanAnnotationFilter(BaseAnnotationFilter):
         self.lookup_val = params.get(self.lookup_kwarg)
         self.lookup_val2 = params.get(self.lookup_kwarg2)
         super().__init__(request, params, model, model_admin)
+        flatten_used_parameters(self.used_parameters, False)
         if (self.used_parameters and self.lookup_kwarg in self.used_parameters and
                 self.used_parameters[self.lookup_kwarg] in ('1', '0')):
             self.used_parameters[self.lookup_kwarg] = bool(int(self.used_parameters[self.lookup_kwarg]))
