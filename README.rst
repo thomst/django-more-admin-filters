@@ -83,6 +83,8 @@ Filter classes
     Multi select dropdown filter for all kind of fields.
 * **MultiSelectRelatedDropdownFilter**
     Multi select dropdown filter for relation fields.
+* **MultiSelectRelatedDropdownNullFilter**
+    Multi select dropdown filter for relation fields with null option.
 * **MultiSelectRelatedOnlyDropdownFilter**
     Multi select dropdown filter for relation fields with choices limited to the objects
     involved in that relation.
