@@ -330,6 +330,31 @@ class MultiSelectRelatedOnlyDropdownFilter(MultiSelectRelatedDropdownFilter, Mul
     pass
 
 
+class MultiSelectRelatedDropdownNullFilter(MultiSelectRelatedDropdownFilter):
+    def __init__(self, field, request, params, model, model_admin, field_path):
+        other_model = get_model_from_relation(field)
+
+        self.lookup_kwarg = "%s__%s__in" % (field_path, field.target_field.name)
+        self.lookup_kwarg_isnull = "%s__isnull" % field_path
+
+        lookup_vals = request.GET.get(self.lookup_kwarg)
+        self.lookup_vals = lookup_vals.split(",") if lookup_vals else list()
+        self.lookup_val_isnull = request.GET.get(self.lookup_kwarg_isnull)
+
+        super(RelatedFieldListFilter, self).__init__(field, request, params, model, model_admin, field_path)
+
+        flatten_used_parameters(self.used_parameters)
+
+        self.lookup_choices = self.field_choices(field, request, model_admin)
+        if hasattr(field, "verbose_name"):
+            self.lookup_title = field.verbose_name
+        else:
+            self.lookup_title = other_model._meta.verbose_name
+
+        self.title = self.lookup_title
+        self.empty_value_display = model_admin.get_empty_value_display()
+
+
 # Filter for annotated attributes.
 # NOTE: The code is more or less the same than admin.FieldListFilter but
 # we must not subclass it. Otherwise django's filter setup routine wants a real
