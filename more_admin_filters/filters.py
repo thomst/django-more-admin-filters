@@ -20,6 +20,9 @@ def flatten_used_parameters(used_parameters: dict, keep_list: bool = True):
     for k, v in used_parameters.items():
         if len(v) == 1 and (isinstance(v[0], list) or not keep_list):
             used_parameters[k] = v[0]
+        elif k.endswith("__isnull") and len(v) == 1 and isinstance(v, list) and isinstance(v[0], bool):
+                used_parameters[k] = v[0]
+
 
 
 # Generic filter using a dropdown widget instead of a list.
