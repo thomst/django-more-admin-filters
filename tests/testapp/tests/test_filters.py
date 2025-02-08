@@ -49,3 +49,13 @@ class FilterTest(TestCase):
             resp = self.client.get(self.url + '?' + query)
             self.assertEqual(resp.status_code, 200)
             self.assertIn('{} selected'.format(count), resp.content.decode('utf8'))
+
+    def test_03_multiselect_isnull_issue(self):
+        queries = [
+            'multiselect__isnull=Truee',
+            'multiselect_dropdown__isnull=True',
+            'multiselect_related__isnull=Truee',
+        ]
+        for query in queries:
+            resp = self.client.get(self.url + '?' + query)
+            self.assertEqual(resp.status_code, 200)
