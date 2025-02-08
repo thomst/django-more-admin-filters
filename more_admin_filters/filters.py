@@ -144,7 +144,7 @@ class MultiSelectFilter(MultiSelectMixin, admin.AllValuesFieldListFilter):
         return used_parameters
 
     def choices(self, changelist):
-        add_facets = getattr(changelist, "add_facets", False) 
+        add_facets = getattr(changelist, "add_facets", False)
         facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         yield {
             'selected': not self.lookup_vals and self.lookup_val_isnull is None,
@@ -198,7 +198,7 @@ class MultiSelectRelatedFilter(MultiSelectMixin, admin.RelatedFieldListFilter):
         self.empty_value_display = model_admin.get_empty_value_display()
 
     def choices(self, changelist):
-        add_facets = getattr(changelist, "add_facets", False) 
+        add_facets = getattr(changelist, "add_facets", False)
         facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         yield {
             'selected': not self.lookup_vals and not self.lookup_val_isnull,
@@ -250,7 +250,7 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
     template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
-        add_facets = getattr(changelist, "add_facets", False) 
+        add_facets = getattr(changelist, "add_facets", False)
         facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
         yield {
@@ -295,7 +295,7 @@ class MultiSelectRelatedDropdownFilter(MultiSelectRelatedFilter):
     template = 'more_admin_filters/multiselectdropdownfilter.html'
 
     def choices(self, changelist):
-        add_facets = getattr(changelist, "add_facets", False) 
+        add_facets = getattr(changelist, "add_facets", False)
         facet_counts = self.get_facet_queryset(changelist) if add_facets else None
         query_string = changelist.get_query_string({}, [self.lookup_kwarg, self.lookup_kwarg_isnull])
         yield {
