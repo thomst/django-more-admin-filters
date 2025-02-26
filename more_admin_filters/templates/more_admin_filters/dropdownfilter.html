@@ -3,7 +3,7 @@
 
 <ul>
 {% if choices|slice:"4:" %}
-    <li><select id="{{ title|slugify }}_filter_select" style="width:100%;color:#666">
+    <li><select id="{{ title|slugify }}_filter_select" style="width:100%">
     {% for choice in choices %}
         <option{% if choice.selected %} selected="selected"{% endif %}
          value="{{ choice.query_string|iriencode }}">{{ choice.display }}</option>

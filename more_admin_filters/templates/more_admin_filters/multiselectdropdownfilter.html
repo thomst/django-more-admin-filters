@@ -8,7 +8,7 @@
         </li>
     {% endfor %}
     <li>
-        <select id="{{ title|slugify }}_select" multiple style="color:#999;width:100%">
+        <select id="{{ title|slugify }}_select" multiple style="width:100%">
         {% for choice in choices|slice:"1:" %}
             <option{% if choice.selected %} selected{% endif %}
                 value="{{ choice.value }}"
@@ -21,7 +21,7 @@
     </li>
     <li>
         <a id="{{ title|slugify }}_submit" href="" title="filter" class="button"
-        style="background-color:buttonface;color:#666">filter</a>
+        style="border:1px solid var(--border-color);background:var(--darkened-bg)">filter</a>
     </li>
 </ul>
 
