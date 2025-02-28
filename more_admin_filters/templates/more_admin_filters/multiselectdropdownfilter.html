@@ -35,7 +35,10 @@
         $('select#{{ title|slugify }}_select > option:selected').each(function() {
             var key = $(this).attr('data-key');
             if (! params.hasOwnProperty(key)) params[key] = [];
-            params[key].push($(this).val());
+            // change comas (',') in values on '%~' to use values
+            // with comas like 'Car, vehicle'.
+            let new_val = $(this).val().replace(',', '%~')
+            params[key].push(new_val);
             if (!query) query = $(this).attr('data-query');
         });
 
