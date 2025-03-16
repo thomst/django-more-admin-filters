@@ -277,7 +277,7 @@ class MultiSelectDropdownFilter(MultiSelectFilter):
                 'selected': qval in self.lookup_vals,
                 'query_string': query_string,
                 "display": f"{val} ({count})" if add_facets else val,
-                'value': urllib.parse.quote_plus(val),
+                'value': urllib.parse.quote_plus(val.replace(',', '%~')),
                 'key': self.lookup_kwarg,
             }
         if include_none:
