@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from datetime import timedelta
-
 from django.core.management.base import BaseCommand
-from django.core.management.base import CommandError
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 
