@@ -1,5 +1,6 @@
 
 import time
+import urllib
 
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -10,6 +11,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import Select
 
 from ..management.commands.createtestdata import create_test_data
+from ..management.commands.createtestdata import UTF8_STRESS_TEST_STRING
 
 
 class FilterPage:
@@ -179,3 +181,12 @@ class LiveFilterTest(StaticLiveServerTestCase):
         field, query_key = 'multiselect-related-dropdown', 'multiselect_related_dropdown__id__in='
         options = [str(i) for i in range(1, 9)]
         self.check_multiselect_dropdown_filter(field, options, query_key, 4)
+
+    def test_03_multiselect_dropdown_utf8_filter(self):
+        self.page.get()
+
+        # check multiselect dropdown filter with utf8
+        field, query_key = 'multiselect-utf8', 'multiselect_utf8__in='
+        v = lambda i: urllib.parse.quote_plus(f'{i} + {UTF8_STRESS_TEST_STRING}'.replace(',', '%~'))
+        options = [v(i) for i in [0, 3]]
+        self.check_multiselect_dropdown_filter(field, options, query_key, 14)

@@ -10,6 +10,9 @@ from django.db.utils import IntegrityError
 from ...models import ModelA, ModelB, ModelC
 
 
+UTF8_STRESS_TEST_STRING = 'STARGΛ̊TE SG-1, a = v̇ = r̈, a⃑ ⊥ b⃑'
+
+
 def create_test_data():
     try:
         User.objects.create_superuser(
@@ -42,6 +45,7 @@ def create_test_data():
             model_a.dropdown_gt3 = i % 4
             model_a.choices_dropdown = i % 9 +1
             model_a.multiselect = i % 5
+            model_a.multiselect_utf8 = f'{i % 5} + {UTF8_STRESS_TEST_STRING}'
             model_a.multiselect_dropdown = i % 6
             model_a.related_dropdown = model_b
             model_a.multiselect_related = model_b

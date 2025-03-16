@@ -32,6 +32,7 @@ class ModelA(models.Model):
     dropdown_lte3 = models.IntegerField(blank=True, null=True)
     dropdown_gt3 = models.IntegerField(blank=True, null=True)
     multiselect = models.IntegerField(blank=True, null=True)
+    multiselect_utf8 = models.CharField(max_length=255, blank=True, null=True)
     multiselect_dropdown = models.IntegerField(blank=True, null=True)
     choices_dropdown = models.CharField(max_length=255, blank=True, null=True, choices=CHOICES)
     related_dropdown = models.ForeignKey(

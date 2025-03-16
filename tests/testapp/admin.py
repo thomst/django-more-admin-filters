@@ -18,6 +18,7 @@ class ModelAAdmin(admin.ModelAdmin):
         'dropdown_lte3',
         'dropdown_gt3',
         'multiselect',
+        'multiselect_utf8',
         'multiselect_dropdown',
         'choices_dropdown',
         'related_dropdown',
@@ -37,6 +38,7 @@ class ModelAAdmin(admin.ModelAdmin):
         ('multiselect_related', MultiSelectRelatedFilter),
         ('multiselect_related_dropdown', MultiSelectRelatedDropdownFilter),
         BooleanAnnotationFilter.init('boolean_annotation'),
+        ('multiselect_utf8', MultiSelectDropdownFilter),
     )
 
     def annotation_view(self, obj):
