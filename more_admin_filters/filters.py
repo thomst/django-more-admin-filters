@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.utils import reverse_field_path
+from django.contrib.admin.utils import get_last_value_from_parameters
 from django.contrib.admin.utils import get_model_from_relation
 from django.core.exceptions import ValidationError
 from django.contrib.admin.options import IncorrectLookupParameters
@@ -393,8 +394,8 @@ class BooleanAnnotationFilter(BaseAnnotationFilter):
     def __init__(self, request, params, model, model_admin):
         self.lookup_kwarg = '%s__exact' % self.attribute_name
         self.lookup_kwarg2 = '%s__isnull' % self.attribute_name
-        self.lookup_val = params.get(self.lookup_kwarg)
-        self.lookup_val2 = params.get(self.lookup_kwarg2)
+        self.lookup_val = get_last_value_from_parameters(params, self.lookup_kwarg)
+        self.lookup_val2 = get_last_value_from_parameters(params, self.lookup_kwarg2)
         super().__init__(request, params, model, model_admin)
         flatten_used_parameters(self.used_parameters, False)
         if (self.used_parameters and self.lookup_kwarg in self.used_parameters and
