@@ -19,6 +19,12 @@ Welcome to django-more-admin-filters
    :alt: django: 2.2, 3.0, 3.1, 3.2, 4.0, 4.1, 4.2, 5.0, 5.1
 
 
+.. note::
+    If you are looking for a generic way of building and apply complex filter
+    with a dynamic form right in the django admin backend please checkout
+    `django-searchkit <https://github.com/thomst/django-searchkit>`_.
+
+
 Description
 ===========
 Django-more-admin-filters is a collection of django admin filters with a focus
