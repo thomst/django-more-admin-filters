@@ -5,7 +5,6 @@ from django.contrib import admin
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.utils import reverse_field_path
-from django.contrib.admin.utils import get_last_value_from_parameters
 from django.contrib.admin.utils import get_model_from_relation
 from django.core.exceptions import ValidationError
 from django.contrib.admin.options import IncorrectLookupParameters
@@ -26,6 +25,11 @@ def flatten_used_parameters(used_parameters: dict, keep_list: bool = True):
         elif k.endswith("__isnull") and len(v) == 1 and isinstance(v, list) and isinstance(v[0], bool):
                 used_parameters[k] = v[0]
 
+
+# Copied this from django5 to be backward compatible.
+def get_last_value_from_parameters(parameters, key):
+    value = parameters.get(key)
+    return value[-1] if isinstance(value, list) else value
 
 
 # Generic filter using a dropdown widget instead of a list.
