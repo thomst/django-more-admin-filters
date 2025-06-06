@@ -33,7 +33,7 @@ setup(
     name="django-more-admin-filters",
     version=version,
     description="Additional filters for django-admin.",
-    long_description=read("README.rst"),
+    long_description=read("README.md"),
     author="Thomas Leichtfuß",
     author_email="thomas.leichtfuss@posteo.de",
     url="https://github.com/thomst/django-more-admin-filters",
