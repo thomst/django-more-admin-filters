@@ -12,7 +12,7 @@
         {% for choice in choices|slice:"1:" %}
             <option{% if choice.selected %} selected{% endif %}
                 value="{{ choice.value }}"
-                title="{{ choice.value }}"
+                title="{{ choice.display }}"
                 data-key="{{ choice.key }}"
                 data-query="{{ choice.query_string|iriencode }}">
                 {{ choice.display }}
