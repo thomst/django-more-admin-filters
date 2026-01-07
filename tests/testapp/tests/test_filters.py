@@ -6,6 +6,11 @@ from django.urls import reverse
 
 from ..management.commands.createtestdata import create_test_data
 
+# Print python and django version for easier debugging.
+import sys, django
+print("Python version:", sys.version)
+print("Django version:", django.get_version())
+
 
 class FilterTest(TestCase):
     @classmethod
