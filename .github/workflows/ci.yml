@@ -43,6 +43,9 @@ jobs:
           - python-version: "3.12"
             django-version: Django==5.2
 
+          - python-version: "3.13"
+            django-version: Django==6.0
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3

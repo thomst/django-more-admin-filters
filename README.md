@@ -2,8 +2,8 @@
 
 [![Run tests for django-more-admin-filters](https://github.com/thomst/django-more-admin-filters/actions/workflows/ci.yml/badge.svg)](https://github.com/thomst/django-more-admin-filters/actions/workflows/ci.yml)
 [![coveralls badge](https://coveralls.io/repos/github/thomst/django-more-admin-filters/badge.svg?branch=master)](https://coveralls.io/github/thomst/django-more-admin-filters?branch=master)
-[![python: 3.7, 3.8, 3.9, 3.10, 3.11, 3.12](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)
-[![django: 2.2, 3.0, 3.1, 3.2, 4.0, 4.1, 4.2, 5.0, 5.1](https://img.shields.io/badge/django-2.2%20%7C%203.0%20%7C%203.1%20%7C%203.2%20%7C%204.0%20%7C%204.1%20%7C%204.2%20%7C%205.0%20%7C%205.1%20%7C%205.2-orange)](https://img.shields.io/badge/django-2.2%20%7C%203.0%20%7C%203.1%20%7C%203.2%20%7C%204.0%20%7C%204.1%20%7C%204.2%20%7C%205.0%20%7C%205.1%20%7C%205.2-orange)
+[![python: 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3,13](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)
+[![django: 2.2, 3.0, 3.1, 3.2, 4.0, 4.1, 4.2, 5.0, 5.1, 5.2, 6.0](https://img.shields.io/badge/django-2.2%20%7C%203.0%20%7C%203.1%20%7C%203.2%20%7C%204.0%20%7C%204.1%20%7C%204.2%20%7C%205.0%20%7C%205.1%20%7C%205.2%20%7C%206.0-orange)](https://img.shields.io/badge/django-2.2%20%7C%203.0%20%7C%203.1%20%7C%203.2%20%7C%204.0%20%7C%204.1%20%7C%204.2%20%7C%205.0%20%7C%205.1%20%7C%205.2%20%7C%206.0-orange)
 
 > **Note**
 > If you are looking for a generic way of building and applying complex filters with a dynamic form right in the django admin backend, please checkout [django-searchkit](https://github.com/thomst/django-searchkit).
